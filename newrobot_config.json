@@ -62,7 +62,7 @@
     "P": {
       "config": {
         "port": "\\\\.\\CNCB0",
-        "incr_mode": "N0",
+        "incr_mode": "N1",
         "empty_volume": 0,
         "total_volume": 1000
       },

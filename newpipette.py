@@ -20,7 +20,7 @@ class Pipette(object):
 		self.home_volume = -1000 # uL
 		self.open_serial(port)
 		self.initialize()
-		self.set_increment(incr_mode, incr_lookup)
+		self.set_increment(incr_mode, increments)
 		
 	## CONFIG
 	@classmethod
@@ -51,7 +51,7 @@ class Pipette(object):
 			self.command = '/1{}R'.format(incr_mode)
 			self.ser.write(self.command)
 			sleep(1)
-		self.ul_per_incr = increments[{}].format(incr_mode)
+		self.ul_per_incr = increments[incr_mode]
 		print self.ul_per_incr
 		return 'Increment mode set to {}'.format(incr_mode)
 		
