@@ -1,0 +1,24 @@
+{
+	"default": {
+		"start_velocity": 0,
+		"top_velocity": 1000,
+		"cutoff_velocity": 200,
+		"acceleration": "8",
+		"deceleration": "5"
+	},
+	"water": {
+		"start_velocity": 0,
+		"top_velocity": 1000,
+		"cutoff_velocity": 200,
+		"acceleration": "8",
+		"deceleration": "5"
+	},
+	"oil": {
+		"start_velocity": 0,
+		"top_velocity": 500,
+		"cutoff_velocity": 100,
+		"acceleration": "4",
+		"deceleration": "3"
+	}
+}
+	
