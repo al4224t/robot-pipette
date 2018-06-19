@@ -1,0 +1,25 @@
+{
+	"error_codes": [
+		"0 = No error",
+		"1 = Initialization failure",
+		"2 = Invalid command",
+		"3 = Invalid operand",
+		"4 = Pressure sensor fault",
+		"5 = Over pressure",
+		"6 = pLLD error",
+		"7 = Device not initialized",
+		"UNUSED",
+		"9 = Pump overload",
+		"UNUSED",
+		"11 = CAN bus fail",
+		"12 = Invalid checksum",
+		"13 = Non-volatile memory fault",
+		"14 = Command buffer empty",
+		"15 = Command overflow",
+		"16 = Clogged tip",
+		"17 = Air in fluid",
+		"18 = Bubbles/foam in fluid",
+		"19 = Operation volume error"
+	]
+}
+	

@@ -37,9 +37,9 @@ ARENA_CONFIG_FILE = os.path.join(HERE_PATH, 'arena_config.json')
 DEFAULT_XYZ_AXIS = {'mm_per_step': 0.00935,
                     'min': 0,
                     'max': 100}
-DEFAULT_P_PARAMS = {'ul_per_incr': 0.01,
-                    'min': 0,
-                    'max': 100}
+#DEFAULT_P_PARAMS = {'ul_per_incr': 0.01,
+                    #'min': 0,
+                    #'max': 100}
 
 class Robot(object):
 

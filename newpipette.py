@@ -10,6 +10,7 @@ sys.path.append(HERE_PATH)
 
 ROBOT_CONFIG_FILE = os.path.join(HERE_PATH, 'newrobot_config.json')
 PIPETTE_PROFILES_FILE = os.path.join(HERE_PATH, 'pipette_profiles.json')
+PIPETTE_ERRORS_FILE = os.path.join(HERE_PATH, 'pipette_errors.json')
 
 class Pipette(object):
 
@@ -22,7 +23,6 @@ class Pipette(object):
 		
 		#load speed profiles from file "newrobot_config.json"
 		self.profiles = self.profiles_from_file()
-		#self.errors = self.errors_from_file()
 		
 		#open serial connection and initialize
 		self.open_serial(port)
@@ -43,6 +43,16 @@ class Pipette(object):
 	def profiles_from_file(self, file=PIPETTE_PROFILES_FILE):
 		with open(file) as f:
 			return json.load(f)
+			
+	def errors_from_file(self, file=PIPETTE_ERRORS_FILE):
+		with open(file) as f:
+			return json.load(f)
+			
+	def resolve_error_code(self, status):
+		#load the error info from file "pipette_errors.json"
+		self.errors = self.errors_from_file()
+		self.error_number = (ord(status) & 0x1F)
+		return self.errors['error_codes'][self.error_number]
 		
 	## SERIAL CONNECTION TO PIPETTE
 	def open_serial(self, port):
@@ -118,9 +128,9 @@ class Pipette(object):
 			if self.status == '`':
 				print 'idle'
 				break
-			if not '@':
+			if self.status != '@':
 				#self.error = self.error_lookup(self.status)
-				raise Exception('Error Code = {}'.format(self.status))
+				raise Exception('Pipette error {}'.format(self.resolve_error_code(self.status)))
 			sleep(1)
 		
 	def aspirate(self, volume_to_aspirate, time_in_ms = 0, pressure_th = 0):
@@ -151,12 +161,12 @@ class Pipette(object):
 			
 
 p = Pipette.from_configfile()
-test = 'k'
-test = ord(test)
-print test
-test = (test & 0x20)
-test = (test >> 5)
-print test
+#test = 'k'
+#test = ord(test)
+#print test
+#test = (test & 0x20)
+#test = (test >> 5)
+#print test
 p.aspirate(700)
 p.dispense(500)
 p.aspirate(800)
