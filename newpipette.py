@@ -21,16 +21,16 @@ class Pipette(object):
 		self.current_volume = 0
 		self.home_volume = -1000 # uL
 		
-		#load speed profiles from file "newrobot_config.json"
+		#load speed profiles from file "pipette_profiles.json"
 		self.profiles = self.profiles_from_file()
 		
 		#open serial connection and initialize
 		self.open_serial(port)
-		self.initialize()
+		self.send_initialize()
 		self.set_increment(incr_mode, increments)
 		self.speed_profile('default')
 		
-	## CONFIG
+	## SETUP
 	@classmethod
 	def from_config(cls, config):
 		port = config['devices']['P']['config']['port']
@@ -54,7 +54,6 @@ class Pipette(object):
 		self.error_number = (ord(status) & 0x1F)
 		return self.errors['error_codes'][self.error_number]
 		
-	## SERIAL CONNECTION TO PIPETTE
 	def open_serial(self, port):
 		self.ser = serial.Serial(port,9600,timeout=1)
 	
@@ -62,7 +61,7 @@ class Pipette(object):
 		self.ser.close()
 	
 	## COMMANDS
-	def initialize(self):
+	def send_initialize(self):
 		self.command = '/1ZR'
 		self.ser.write(self.command)
 		sleep(1)
@@ -112,13 +111,13 @@ class Pipette(object):
 	
 	## BASIC FUNCTIONS
 	def qualified_move(self, target_volume, time_in_ms, pressure_th):
-		self.target_position = str(int((target_volume/self.ul_per_incr)+0.5))
-		self.send_command('p4q{},{}A{}'.format(time_in_ms, pressure_th, target_position))
+		self.target_position = str(int((target_volume / self.ul_per_incr)+0.5))
+		self.send_command('p4q{},{}A{}'.format(time_in_ms, pressure_th, self.target_position))
 		self.wait_until_idle()
 		self.current_volume = target_volume
 				
 	def absolute_move(self, target_volume):
-		self.target_position = str(int((target_volume/self.ul_per_incr)+0.5))
+		self.target_position = str(int((target_volume / self.ul_per_incr)+0.5))
 		self.send_command('A{}'.format(self.target_position))
 		self.current_volume = target_volume
 
@@ -129,26 +128,27 @@ class Pipette(object):
 				print 'idle'
 				break
 			if self.status != '@':
-				#self.error = self.error_lookup(self.status)
+				#if not idle or busy, must be an error. Throw an exception including the error information
 				raise Exception('Pipette error {}'.format(self.resolve_error_code(self.status)))
+			#pipette busy, so wait a little then check again
 			sleep(1)
 		
 	def aspirate(self, volume_to_aspirate, time_in_ms = 0, pressure_th = 0):
 		if (volume_to_aspirate <= (self.total_volume - self.current_volume)):
-			if time_in_ms == False:
-				self.absolute_move(volume_to_aspirate+self.current_volume)
+			if time_in_ms == 0:
+				self.absolute_move(volume_to_aspirate + self.current_volume)
 			else:
-				self.qualified_move(volume_to_aspirate+self.current_volume, time_in_ms, pressure_th)
+				self.qualified_move(volume_to_aspirate + self.current_volume, time_in_ms, pressure_th)
 			return 'Volume {}uL aspirated into pipette'.format(volume_to_aspirate)
 		else:
 			raise Exception('Not enough space in pipette to aspirate {}uL'.format(volume_to_aspirate))
 			
 	def dispense(self, volume_to_dispense, time_in_ms = 0, pressure_th = 0):
 		if (volume_to_dispense <= (self.current_volume - self.empty_level)):
-			if time_in_ms == False:
-				self.absolute_move(self.current_volume-volume_to_dispense)
+			if time_in_ms == 0:
+				self.absolute_move(self.current_volume - volume_to_dispense)
 			else:
-				self.qualified_move(self.current_volume-volume_to_dispense, time_in_ms, pressure_th)
+				self.qualified_move(self.current_volume - volume_to_dispense, time_in_ms, pressure_th)
 			return 'Volume {}uL dispensed from pipette'.format(volume_to_dispense)
 		else:
 			raise Exception('Not enough in pipette to dispense {}uL'.format(volume_to_dispense))
@@ -167,8 +167,8 @@ p = Pipette.from_configfile()
 #test = (test & 0x20)
 #test = (test >> 5)
 #print test
-p.aspirate(700)
-p.dispense(500)
+p.aspirate(700, 5000, 20)
+p.dispense(500, 3000, 20)
 p.aspirate(800)
 p.dispense(1001)
 p.close_serial()
