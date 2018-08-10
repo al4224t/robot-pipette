@@ -1,0 +1,98 @@
+{
+  "ios" : [
+    {
+      "port": "COM13"
+    },
+    {
+      "port": "COM14"
+    },
+	{
+	  "port": "COM17"
+	}
+  ],
+  "devices": {
+    "X": {
+      "command_id": "X",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 4000,
+        "homing_speed": 3000,
+        "max_speed": 6000,
+        "acceleration": 2000
+      },
+      "axis": {
+        "mm_per_step": 0.00935,
+        "min": 100000,
+        "max": 100000
+      }
+    },
+    "Y": {
+      "command_id": "Y",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 3000,
+        "homing_speed": 3000,
+        "max_speed": 6000,
+        "acceleration": 2000
+      },
+      "axis": {
+        "mm_per_step": 0.00935,
+        "min": 0,
+        "max": 525
+      }
+    },
+    "Z": {
+      "command_id": "Z",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": false,
+        "reverted_direction": true,
+        "speed": 6000,
+        "homing_speed": 6000,
+        "max_speed": 6000,
+        "acceleration": 2000
+      },
+      "axis": {
+        "mm_per_step": 0.00125,
+        "min": 0,
+        "max": 100
+      }
+    },
+    "P": {
+      "command_id": "P",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": true,
+        "speed": 6000,
+        "homing_speed": 2000,
+        "max_speed": 6000,
+        "acceleration": 2000
+      },
+      "axis": {
+        "ul_per_step": 0.021215,
+        "min": 0,
+        "max": 1000
+      }
+    },
+    "S": {
+      "command_id": "S",
+      "config": {
+        "reverted_switch": true,
+        "enabled_acceleration": true,
+        "speed": 6000,
+        "homing_speed": 2000,
+        "max_speed": 6000,
+        "acceleration": 2000
+      },
+      "axis": {
+		"deg_per_step": 0.05625,
+		"min": -100000,
+		"max": 100000
+      }
+    }
+  }
+}
